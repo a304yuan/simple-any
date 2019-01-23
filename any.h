@@ -1,6 +1,8 @@
 #ifndef ANY_H
 #define ANY_H
 
+#include <stdlib.h>
+
 typedef struct any any;
 
 enum _any_type {
@@ -215,20 +217,58 @@ static inline void any_set_pointer(any * _any, void * _pointer) {
 
 static inline void any_get(const any * _any, void * val) {
     switch (_any->type) {
-        case TYPE_CHAR: *(char*)val = _any->data._char; break;
-        case TYPE_UCHAR: *(unsigned char*)val = _any->data._uchar; break;
-        case TYPE_INT: *(int*)val = _any->data._int; break;
-        case TYPE_UINT: *(unsigned int*)val = _any->data._uint; break;
-        case TYPE_SHORT: *(short*)val = _any->data._short; break;
-        case TYPE_USHORT: *(unsigned short*)val = _any->data._ushort; break;
-        case TYPE_LONG: *(long*)val = _any->data._long; break;
-        case TYPE_ULONG: *(unsigned long*)val = _any->data._ulong; break;
-        case TYPE_LLONG: *(long long*)val = _any->data._llong; break;
-        case TYPE_ULLONG: *(unsigned long long*)val = _any->data._ullong; break;
-        case TYPE_FLOAT: *(float*)val = _any->data._float; break;
-        case TYPE_DOUBLE: *(double*) val = _any->data._double; break;
+        case TYPE_CHAR:    *(char*)val = _any->data._char; break;
+        case TYPE_UCHAR:   *(unsigned char*)val = _any->data._uchar; break;
+        case TYPE_INT:     *(int*)val = _any->data._int; break;
+        case TYPE_UINT:    *(unsigned int*)val = _any->data._uint; break;
+        case TYPE_SHORT:   *(short*)val = _any->data._short; break;
+        case TYPE_USHORT:  *(unsigned short*)val = _any->data._ushort; break;
+        case TYPE_LONG:    *(long*)val = _any->data._long; break;
+        case TYPE_ULONG:   *(unsigned long*)val = _any->data._ulong; break;
+        case TYPE_LLONG:   *(long long*)val = _any->data._llong; break;
+        case TYPE_ULLONG:  *(unsigned long long*)val = _any->data._ullong; break;
+        case TYPE_FLOAT:   *(float*)val = _any->data._float; break;
+        case TYPE_DOUBLE:  *(double*) val = _any->data._double; break;
         case TYPE_LDOUBLE: *(long double*)val = _any->data._ldouble; break;
-        default: *(void**)val = _any->data._pointer;
+        default:           *(void**)val = _any->data._pointer;
+    }
+}
+
+static inline void * any_get_ref(const any * _any) {
+    switch (_any->type) {
+        case TYPE_CHAR:    return (void*)&_any->data._char;
+        case TYPE_UCHAR:   return (void*)&_any->data._uchar;
+        case TYPE_INT:     return (void*)&_any->data._int;
+        case TYPE_UINT:    return (void*)&_any->data._uint;
+        case TYPE_SHORT:   return (void*)&_any->data._short;
+        case TYPE_USHORT:  return (void*)&_any->data._ushort;
+        case TYPE_LONG:    return (void*)&_any->data._long;
+        case TYPE_ULONG:   return (void*)&_any->data._ulong;
+        case TYPE_LLONG:   return (void*)&_any->data._llong;
+        case TYPE_ULLONG:  return (void*)&_any->data._ullong;
+        case TYPE_FLOAT:   return (void*)&_any->data._float;
+        case TYPE_DOUBLE:  return (void*)&_any->data._double;
+        case TYPE_LDOUBLE: return (void*)&_any->data._ldouble;
+        default:           return (void*)&_any->data._pointer;
+    }
+}
+
+static inline size_t any_size(const any * _any) {
+    switch (_any->type) {
+        case TYPE_CHAR:    return sizeof(char);
+        case TYPE_UCHAR:   return sizeof(unsigned char);
+        case TYPE_INT:     return sizeof(int);
+        case TYPE_UINT:    return sizeof(unsigned int);
+        case TYPE_SHORT:   return sizeof(short);
+        case TYPE_USHORT:  return sizeof(unsigned short);
+        case TYPE_LONG:    return sizeof(long);
+        case TYPE_ULONG:   return sizeof(unsigned long);
+        case TYPE_LLONG:   return sizeof(long long);
+        case TYPE_ULLONG:  return sizeof(unsigned long long);
+        case TYPE_FLOAT:   return sizeof(float);
+        case TYPE_DOUBLE:  return sizeof(double);
+        case TYPE_LDOUBLE: return sizeof(long double);
+        default:           return sizeof(void*);
     }
 }
 
