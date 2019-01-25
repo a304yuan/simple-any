@@ -98,21 +98,6 @@ static inline void * any_get_pointer(const any * _any) {
     return _any->data._pointer;
 }
 
-/*
-#define any_get(A) (A->type == TYPE_CHAR ? A->data._char : \
-(A->type == TYPE_UCHAR ? A->data._uchar : \
-(A->type == TYPE_INT ? A->data._int : \
-(A->type == TYPE_UINT ? A->data._uint : \
-(A->type == TYPE_LONG ? A->data._long : \
-(A->type == TYPE_ULONG ? A->data._ulong : \
-(A->type == TYPE_LLONG ? A->data._llong : \
-(A->type == TYPE_ULLONG ? A->data._ullong : \
-(A->type == TYPE_FLOAT ? A->data._float : \
-(A->type == TYPE_DOUBLE ? A->data._double : \
-(A->type == TYPE_LDOUBLE ? A->data._ldouble : \
-A->data._pointer)))))))))))
-*/
-
 static inline void any_set_char(any * _any, char _char) {
     _any->type = TYPE_CHAR;
     _any->data._char = _char;
@@ -162,39 +147,7 @@ static inline void any_set_ullong(any * _any, unsigned long long _ullong) {
     _any->type = TYPE_ULLONG;
     _any->data._ullong = _ullong;
 }
-/*
-inline void any_set_int8(any * _any, int8_t _int8) {
-    _any->data._int8 = _int8;
-}
 
-inline void any_set_uint8(any * _any, uint8_t _uint8) {
-    _any->data._uint8 = _uint8;
-}
-
-inline void any_set_int16(any * _any, int16_t _int16) {
-    _any->data._int16 = _int16;
-}
-
-inline void any_set_uint16(any * _any, uint16_t _uint16) {
-    _any->data._uint16 = _uint16;
-}
-
-inline void any_set_int32(any * _any, int32_t _int32) {
-    _any->data._int32 = _int32;
-}
-
-inline void any_set_uint32(any * _any, uint32_t _uint32) {
-    _any->data._uint32 = _uint32;
-}
-
-inline void any_set_int64(any * _any, int64_t _int64) {
-    _any->data._int64 = _int64;
-}
-
-inline void any_set_uint64(any * _any, uint64_t _uint64) {
-    _any->data._uint64 = _uint64;
-}
-*/
 static inline void any_set_float(any * _any, float _float) {
     _any->type = TYPE_FLOAT;
     _any->data._float = _float;
@@ -287,24 +240,6 @@ static inline size_t any_size(const any * _any) {
     double:             any_set_double, \
     long double:        any_set_ldouble, \
     default:            any_set_pointer)(A, X)
-
-/*
-#define ANY(X) _Generic((X), \
-    char:               ((any){.type=TYPE_CHAR,.data._char=X}), \
-    unsigned char:      ((any){.type=TYPE_UCHAR,.data._uchar=X}), \
-    int:                ((any){.type=TYPE_INT,.data._int=X}), \
-    unsigned int:       ((any){.type=TYPE_UINT,.data._uint=X}), \
-    short:              ((any){.type=TYPE_SHORT,.data._short=X}), \
-    unsigned short:     ((any){.type=TYPE_USHORT,.data._ushort=X}), \
-    long:               ((any){.type=TYPE_LONG,.data._long=X}), \
-    unsigned long:      ((any){.type=TYPE_ULONG,.data._ulong=X}), \
-    long long:          ((any){.type=TYPE_LLONG,.data._llong=X}), \
-    unsigned long long: ((any){.type=TYPE_ULLONG,.data._ullong=X}), \
-    float:              ((any){.type=TYPE_FLOAT,.data._float=X}), \
-    double:             ((any){.type=TYPE_DOUBLE,.data._double=X}), \
-    long double:        ((any){.type=TYPE_LDOUBLE,.data._ldouble=X}), \
-    default:            ((any){.type=TYPE_POINTER,.data._pointer=X}))
-*/
 
 #define ANY_CHAR(X)    (any){.type = TYPE_CHAR, .data._char = X}
 #define ANY_UCHAR(X)   (any){.type = TYPE_UCHAR, .data._uchar = X}
