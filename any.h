@@ -2,8 +2,10 @@
 #define ANY_H
 
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct any any;
+typedef struct any_object any_object;
 
 enum _any_type {
     TYPE_CHAR,
@@ -19,7 +21,8 @@ enum _any_type {
     TYPE_FLOAT,
     TYPE_DOUBLE,
     TYPE_LDOUBLE,
-    TYPE_POINTER
+    TYPE_POINTER,
+    TYPE_OBJECT
 };
 
 struct any {
@@ -41,6 +44,15 @@ struct any {
         void * _pointer;
     } data;
 };
+
+struct any_object {
+    size_t size;
+    char data[];
+};
+
+/*
+ * getters
+ */
 
 static inline char any_get_char(const any * _any) {
     return _any->data._char;
@@ -98,6 +110,9 @@ static inline void * any_get_pointer(const any * _any) {
     return _any->data._pointer;
 }
 
+/*
+ * setters
+ */
 static inline void any_set_char(any * _any, char _char) {
     _any->type = TYPE_CHAR;
     _any->data._char = _char;
@@ -168,6 +183,20 @@ static inline void any_set_pointer(any * _any, void * _pointer) {
     _any->data._pointer = _pointer;
 }
 
+static inline void any_set_object(any * _any, const void * src, size_t size) {
+    _any->type = TYPE_OBJECT;
+    any_object * obj = (any_object*)malloc(sizeof(any_object) + size);
+    obj->size = size;
+    memcpy(obj->data, src, size);
+    _any->data._pointer = obj;
+}
+
+static inline void any_clear_object(any * _any) {
+    if (_any->type == TYPE_OBJECT) {
+        free(_any->data._pointer);
+    }
+}
+
 static inline void any_get(const any * _any, void * val) {
     switch (_any->type) {
         case TYPE_CHAR:    *(char*)val = _any->data._char; break;
@@ -183,7 +212,8 @@ static inline void any_get(const any * _any, void * val) {
         case TYPE_FLOAT:   *(float*)val = _any->data._float; break;
         case TYPE_DOUBLE:  *(double*) val = _any->data._double; break;
         case TYPE_LDOUBLE: *(long double*)val = _any->data._ldouble; break;
-        default:           *(void**)val = _any->data._pointer;
+        case TYPE_POINTER: *(void**)val = _any->data._pointer; break;
+        default:           memcpy(val, ((any_object*)_any->data._pointer)->data, ((any_object*)_any->data._pointer)->size);
     }
 }
 
@@ -202,7 +232,8 @@ static inline void * any_get_ref(const any * _any) {
         case TYPE_FLOAT:   return (void*)&_any->data._float;
         case TYPE_DOUBLE:  return (void*)&_any->data._double;
         case TYPE_LDOUBLE: return (void*)&_any->data._ldouble;
-        default:           return (void*)&_any->data._pointer;
+        case TYPE_POINTER: return (void*)&_any->data._pointer;
+        default:           return ((any_object*)_any->data._pointer)->data;
     }
 }
 
@@ -221,7 +252,8 @@ static inline size_t any_size(const any * _any) {
         case TYPE_FLOAT:   return sizeof(float);
         case TYPE_DOUBLE:  return sizeof(double);
         case TYPE_LDOUBLE: return sizeof(long double);
-        default:           return sizeof(void*);
+        case TYPE_POINTER: return sizeof(void*);
+        default:           return ((any_object*)_any->data._pointer)->size;
     }
 }
 
