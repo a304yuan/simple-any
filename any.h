@@ -2,6 +2,7 @@
 #define ANY_H
 
 #include <stdlib.h>
+#include <stdbool.h>
 
 typedef struct any any;
 
@@ -42,6 +43,10 @@ struct any {
         void * _pointer;
     };
 };
+
+static inline bool any_is_none(const any * _any) {
+    return _any->type == TYPE_NONE;
+}
 
 /*
  * getters
