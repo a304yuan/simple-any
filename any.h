@@ -20,7 +20,7 @@ enum _any_type {
     TYPE_DOUBLE,
     TYPE_LDOUBLE,
     TYPE_POINTER,
-    TYPE_OBJECT
+    TYPE_NONE
 };
 
 struct any {
@@ -205,8 +205,8 @@ static inline void any_get(const any * _any, void * val) {
         case TYPE_FLOAT:   *(float*)val = _any->_float;               break;
         case TYPE_DOUBLE:  *(double*) val = _any->_double;            break;
         case TYPE_LDOUBLE: *(long double*)val = _any->_ldouble;       break;
-        //case TYPE_POINTER: *(void**)val = _any->_pointer; break;
-        default:           *(void**)val = _any->_pointer;
+        case TYPE_POINTER: *(void**)val = _any->_pointer;             break;
+        default:           return;
     }
 }
 
@@ -225,8 +225,8 @@ static inline void * any_get_ref(const any * _any) {
         case TYPE_FLOAT:   return (void*)&_any->_float;
         case TYPE_DOUBLE:  return (void*)&_any->_double;
         case TYPE_LDOUBLE: return (void*)&_any->_ldouble;
-        //case TYPE_POINTER: return (void*)&_any->_pointer;
-        default:           return (void*)&_any->_pointer;
+        case TYPE_POINTER: return (void*)&_any->_pointer;
+        default:           return NULL;
     }
 }
 
@@ -245,8 +245,8 @@ static inline size_t any_size(const any * _any) {
         case TYPE_FLOAT:   return sizeof(float);
         case TYPE_DOUBLE:  return sizeof(double);
         case TYPE_LDOUBLE: return sizeof(long double);
-        //case TYPE_POINTER: return sizeof(void*);
-        default:           return sizeof(void*);
+        case TYPE_POINTER: return sizeof(void*);
+        default:           return 0;
     }
 }
 
@@ -280,5 +280,6 @@ static inline size_t any_size(const any * _any) {
 #define ANY_DOUBLE(X)  (any){.type = TYPE_DOUBLE,  ._double = X}
 #define ANY_LDOUBLE(X) (any){.type = TYPE_LDOUBLE, ._ldouble = X}
 #define ANY_POINTER(X) (any){.type = TYPE_POINTER, ._pointer = X}
+#define ANY_NONE       (any){.type = TYPE_NONE}
 
 #endif /* end of include guard: ANY_H */
